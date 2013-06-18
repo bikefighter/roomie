@@ -53,15 +53,15 @@ module Roomie
         cross_off(*pair)
       end
       puts "@best_proposals: #{@best_proposals}" if $DEBUG
-      print_proposals
-      print_prefs
+      print_proposals if $DEBUG
+      print_prefs if $DEBUG
       sent_proposals.each_with_index do |proposed_to, i|
         if proposed_to == nil
           propose(i)
         end
       end
       raise Roomie::NotSolvable, 'Problem has no solution' if @people_prefs.any? {|p| p.length == 0} 
-      print_proposals
+      print_proposals if $DEBUG
 
     end
 
@@ -137,12 +137,12 @@ module Roomie
 
     # Looking for a pattern in the proposals.
     def cycle_crawl(person, ps=[], qs=[])
-      puts "cycle crawl with (#{person}, #{ps}, #{qs})"
+      puts "cycle crawl with (#{person}, #{ps}, #{qs})" if $DEBUG
       second_choice = @people_prefs[person][1]
-      puts "second_choice: #{second_choice}"
+      puts "second_choice: #{second_choice}" if $DEBUG
       if ps.include?(person) && qs.include?(second_choice)
-        puts "ps: #{ps} << #{person}"
-        puts "qs: #{qs} << #{second_choice}"
+        puts "ps: #{ps} << #{person}" if $DEBUG
+        puts "qs: #{qs} << #{second_choice}" if $DEBUG
         ps = ps.slice(ps.index(person), ps.size)
         ps.rotate!
         qs = qs.slice(qs.index(second_choice), qs.size)
@@ -153,7 +153,7 @@ module Roomie
         qs << second_choice
 
         person_next = @people_prefs[second_choice].last
-        puts "person_next: #{person_next}"
+        puts "person_next: #{person_next}" if $DEBUG
         
         return cycle_crawl(person_next, ps, qs)
       end
