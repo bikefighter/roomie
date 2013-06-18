@@ -2,7 +2,7 @@ require 'roomie/not_solvable'
 
 module Roomie
   class Solve
-    attr_reader :matches
+    attr_reader :matches, :matched_pairs
 
     def initialize *people_prefs
       @people_prefs = *people_prefs
@@ -10,22 +10,28 @@ module Roomie
       @best_proposals = Array.new(@group_size)
 
       if phase_one
-        return @matches = @people_prefs.flatten
+        @matches = @people_prefs.flatten
+        matched_pairs
+        return
       else
         until @people_prefs.all? {|p| p.count == 1}
           phase_two 
         end
-        return @matches = @people_prefs.flatten
+        @matches = @people_prefs.flatten
+        match_pairs
+        return
       end
     end
 
+  private
+
     def match_pairs
-      pairs = []
+      @matched_pairs = []
       @matches.each_with_index do |match, person|
         pair = [person, match].sort
-        pairs << pair unless pairs.include? pair
+        @matched_pairs << pair unless @matched_pairs.include? pair
       end
-      pairs
+      @matched_pairs
     end
 
     def phase_one
