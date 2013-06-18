@@ -1,4 +1,4 @@
-require 'not_solvable'
+require 'roomie/not_solvable'
 
 module Roomie
   class Solve
